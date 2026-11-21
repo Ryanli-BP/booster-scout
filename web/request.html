@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ask your boutique for the hour · Booster</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="request.css" />
+</head>
+<body class="req-body">
+  <header class="top">
+    <div class="brand">Booster</div>
+    <div class="tag">Within the hour, from London’s boutiques</div>
+  </header>
+
+  <main class="req">
+    <section id="ask">
+      <p class="eyebrow">Bought online at two. Opened at home by three.</p>
+      <h1>Which boutique should deliver to you within the hour?</h1>
+      <p class="lede">Tell us the boutique you’d love to order from, and roughly where you are. When enough people ask, we take your request to them.</p>
+
+      <form id="req-form" class="req-form">
+        <label>Boutique
+          <input id="r-boutique" maxlength="80" placeholder="e.g. RIXO" required autocomplete="off" />
+        </label>
+        <label>First half of your postcode
+          <input id="r-postcode" maxlength="5" placeholder="e.g. W1U" required autocomplete="off" />
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="r-notify" />
+          <span>Email me when this boutique offers within-the-hour delivery</span>
+        </label>
+        <label id="r-email-row" class="hidden">Email
+          <input id="r-email" type="email" maxlength="120" placeholder="you@example.com" autocomplete="email" />
+        </label>
+        <button type="submit" id="r-go">Ask for the hour</button>
+        <p id="r-error" class="error-text hidden"></p>
+        <p class="muted small">We keep the boutique name and the first half of your postcode. We keep your email only if you tick the box, use it only for that one message, and never share it with the boutique.</p>
+      </form>
+    </section>
+
+    <section id="thanks" class="hidden">
+      <p class="eyebrow">Request received</p>
+      <h1 id="t-title"></h1>
+      <p class="lede" id="t-sub"></p>
+
+      <div class="card">
+        <h3>Ask them yourself, too</h3>
+        <p class="muted">A note from a customer carries more weight than anything we send. Copy this into an email or a direct message to the boutique:</p>
+        <div class="li" id="t-message"></div>
+        <div class="actions"><button class="ghost" id="t-copy-msg">Copy message</button></div>
+      </div>
+
+      <div class="card">
+        <h3>Bring a friend</h3>
+        <p class="muted" id="t-reward"></p>
+        <div class="share-row">
+          <input id="t-link" readonly />
+          <button class="ghost" id="t-copy-link">Copy link</button>
+          <a id="t-whatsapp" target="_blank" rel="noopener"><button class="ghost" type="button">Share on WhatsApp</button></a>
+        </div>
+        <p class="muted small" id="t-referred"></p>
+      </div>
+
+      <p><a href="request.html" class="muted">Ask for another boutique</a></p>
+    </section>
+  </main>
+
+  <footer>Booster · within-the-hour delivery for London’s luxury boutiques</footer>
+  <script src="config.js"></script>
+  <script src="request.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booster Scout</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Booster <span>Scout</span></div>
+    <div class="tag"><span id="mode" class="mode hidden"></span>Find the boutique. Make the case. Open the door.</div>
+  </header>
+
+  <main>
+    <nav class="views">
+      <button class="on" data-view="boutique">Boutique pitch</button>
+      <button data-view="requests">Customer requests</button>
+      <button data-view="buyers">Power buyers</button>
+    </nav>
+
+    <div id="view-requests" class="hidden">
+      <section class="hero">
+        <h1>Which boutiques are customers asking for?</h1>
+        <p class="lede">Shoppers ask for their favourite boutique on Booster’s public page and share it with friends. Every request is counted here, and the real number goes straight into Scout’s pitch to that boutique.</p>
+        <div class="actions">
+          <a href="request.html" target="_blank" rel="noopener"><button>Open the public request page ↗</button></a>
+          <button class="ghost" id="rq-refresh">Refresh</button>
+        </div>
+      </section>
+      <h4 class="section"><span>1</span>Most requested<em>Ranked by requests from postcodes Booster already covers</em></h4>
+      <div class="card">
+        <table class="rq-table">
+          <thead><tr><th>Boutique</th><th>Requests</th><th>In Booster zone</th><th>Top districts</th><th>Via referrals</th><th></th></tr></thead>
+          <tbody id="rq-body"></tbody>
+        </table>
+        <p class="muted small" id="rq-empty">No requests yet. Open the public page and ask for a boutique to see it appear here.</p>
+      </div>
+      <h4 class="section"><span>2</span>How it works<em>The customer does the pitching</em></h4>
+      <div class="card rq-how">
+        <div><b>1. Ask</b><span>A shopper names a boutique and gives the first half of their postcode. Email only if they opt in.</span></div>
+        <div><b>2. Share</b><span>They get a ready-made note to send the boutique themselves, and a referral link for friends.</span></div>
+        <div><b>3. Count</b><span>Requests are tallied per boutique and district. No personal data leaves this screen.</span></div>
+        <div><b>4. Pitch</b><span>Scout puts the real count into the email: “38 shoppers asked us to bring RIXO’s hour to them.”</span></div>
+      </div>
+    </div>
+
+    <div id="view-buyers" class="hidden">
+      <section class="hero">
+        <h1>Who around the boutique would back Booster?</h1>
+        <p class="lede">Hotel concierges, members’ clubs, event venues and offices near a boutique buy on other people’s behalf, and need it now. Win them first, then walk into the boutique with “your neighbours want this”.</p>
+        <form id="pb-form" class="search">
+          <input id="pb-q" placeholder="e.g. rixolondon.com, Rixo or W1U 4AD" autocomplete="off" required />
+          <button id="pb-go" type="submit">Find</button>
+        </form>
+        <div id="pb-recent" class="recent"></div>
+      </section>
+
+      <section id="pb-progress" class="card progress hidden">
+        <div class="stages">
+          <div class="stage" data-stage="locate"><span class="dot"></span>Locate boutique</div>
+          <div class="stage" data-stage="scan"><span class="dot"></span>Scan the area</div>
+          <div class="stage" data-stage="contact"><span class="dot"></span>Find contacts</div>
+          <div class="stage" data-stage="write"><span class="dot"></span>Write outreach</div>
+        </div>
+        <div class="now" id="pb-now"><span class="spinner"></span><span id="pb-now-text">Starting…</span></div>
+        <button type="button" class="ghost log-toggle" data-log="pb-log">Show research log</button>
+        <ol id="pb-log" class="log"></ol>
+      </section>
+
+      <section id="pb-error" class="card error hidden"></section>
+
+      <section id="pb-result" class="hidden">
+        <h4 class="section"><span>1</span>The neighbourhood<em>Who is within a 10-minute walk of the boutique</em></h4>
+        <div class="card verdict-card">
+          <div>
+            <div class="eyebrow" id="pb-where"></div>
+            <h2 id="pb-title"></h2>
+            <p class="muted" id="pb-sub"></p>
+          </div>
+          <div class="pb-stats" id="pb-stats"></div>
+        </div>
+        <div class="pb-main">
+          <div class="card map-card"><div id="pb-map"></div></div>
+          <div class="card pb-list-card">
+            <h3>Shortlist <span class="pill">ranked</span></h3>
+            <ol id="pb-list" class="pb-list"></ol>
+          </div>
+        </div>
+        <h4 class="section"><span>2</span>Reach out<em>Pick a business from the list or the map</em></h4>
+        <div class="card" id="pb-detail"></div>
+        <h4 class="section"><span>3</span>Bring it back to the boutique<em>Turn their yeses into proof</em></h4>
+        <div class="card proof">
+          <h3>Then, the line for the boutique pitch</h3>
+          <p id="pb-proof" class="proof-line"></p>
+          <button class="ghost" id="pb-proof-copy">Copy</button>
+          <p class="muted small">Fill in [N] once the replies come in. Only businesses and their public business contact details are used; no private individuals are looked up.</p>
+        </div>
+      </section>
+    </div>
+
+    <div id="view-boutique">
+    <section class="hero">
+      <h1>Which boutique should get the hour?</h1>
+      <p class="lede">Type a London boutique’s name or website. Scout checks the storefront, researches it live, scores the fit for Booster and writes outreach to the right people.</p>
+      <form id="form" class="search">
+        <input id="q" name="q" placeholder="e.g. rixolondon.com or Penhaligon's" autocomplete="off" required />
+        <button id="go" type="submit">Scout</button>
+      </form>
+      <div id="recent" class="recent"></div>
+    </section>
+
+    <section id="progress" class="card progress hidden">
+      <div class="stages">
+        <div class="stage" data-stage="checks"><span class="dot"></span>Storefront</div>
+        <div class="stage" data-stage="research"><span class="dot"></span><span id="research-label">Live research</span></div>
+        <div class="stage" data-stage="write"><span class="dot"></span>Score &amp; write</div>
+      </div>
+      <div id="now" class="now"><span class="spinner"></span><span id="now-text">Starting…</span></div>
+      <button type="button" class="ghost log-toggle" data-log="log">Show research log</button>
+      <ol id="log" class="log"></ol>
+    </section>
+
+    <section id="error" class="card error hidden"></section>
+
+    <section id="result" class="hidden">
+      <h4 class="section"><span>1</span>Is it a fit?<em>Verdict, five checks and what the storefront tells us</em></h4>
+      <div class="card verdict-card">
+        <div>
+          <div class="eyebrow" id="b-site"></div>
+          <h2 id="b-name"></h2>
+          <p id="b-line" class="muted"></p>
+          <p id="b-demand" class="demand hidden"></p>
+          <ul id="b-stores" class="stores"></ul>
+        </div>
+        <div id="verdict" class="verdict"></div>
+      </div>
+
+      <div class="grid checks" id="checks"></div>
+
+      <div class="card" id="hard">
+        <h3>From the storefront</h3>
+        <div id="hard-body"></div>
+      </div>
+
+      <h4 class="section"><span>2</span>Who to talk to<em>Who decides, then the three people to approach and how</em></h4>
+      <div class="card" id="org-card">
+        <h3>Who decides <span class="pill">decision map</span></h3>
+        <p class="muted small" id="org-note"></p>
+        <div class="org" id="org"></div>
+      </div>
+
+      <div class="card">
+        <h3>Three people to contact</h3>
+        <div class="people" id="people"></div>
+        <div class="channels" id="channels">
+          <button data-ch="online" class="on">Email &amp; LinkedIn</button>
+          <button data-ch="person">In person</button>
+        </div>
+        <div id="channel-panel"></div>
+      </div>
+
+      <details class="card">
+        <summary>Personalisation facts <span class="muted small">(sources for everything in the messages)</span></summary>
+        <ol id="facts" class="facts" style="margin-top:14px"></ol>
+      </details>
+
+      <h4 class="section"><span>3</span>The outreach<em>Follow-ups, then the mini pitch once they say yes</em></h4>
+
+      <div class="card">
+        <h3>Follow-up sequence</h3>
+        <div class="timeline" id="timeline"></div>
+      </div>
+
+      <div class="card" id="ay-card">
+        <h3>After they say yes <span class="pill">mini pitch</span></h3>
+        <p class="muted small">Send this once the boutique replies positively. It names the gaps respectfully, shows what the numbers could look like, and teases how Booster works. Edit the assumptions and the email updates.</p>
+        <div class="ay-grid">
+          <div>
+            <div class="mail">
+              <div class="hdr">Subject: <b id="ay-subject"></b></div>
+              <div class="body" id="ay-body"></div>
+            </div>
+            <div class="actions">
+              <button class="ghost" id="ay-copy">Copy email</button>
+              <a id="ay-mailto"><button class="ghost">Open in mail app</button></a>
+            </div>
+          </div>
+          <div class="ay-calc">
+            <div class="eyebrow">Assumptions (illustrative)</div>
+            <label>Online orders / month to Booster postcodes <input type="number" id="ay-orders" min="0" step="10" /></label>
+            <label>% who choose the hour <input type="number" id="ay-uptake" min="0" max="100" step="1" /></label>
+            <label>Conversion lift for those visitors (%) <input type="number" id="ay-lift" min="0" max="100" step="0.5" /></label>
+            <label>Average item (£) <input type="number" id="ay-item" min="0" step="5" /></label>
+            <label>Within-the-hour price (£) <input type="number" id="ay-fee" min="0" step="1" /></label>
+            <div class="ay-out" id="ay-out"></div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="section"><span>4</span>Why it works<em>Benchmarks behind the approach, and the raw research</em></h4>
+      <div class="card why">
+        <h3>Why this should convert</h3>
+        <div class="stats">
+          <div><b>~18%</b><span>reply rate with advanced personalisation, vs ~9% for templates and ~3.4% for average cold email</span></div>
+          <div><b>+93%</b><span>response when several people at the same company are contacted</span></div>
+          <div><b>9.36%</b><span>LinkedIn reply rate with a personal note, vs 5.44% without</span></div>
+          <div><b>42%</b><span>of replies come from follow-ups, not the first email</span></div>
+        </div>
+        <p class="muted small">Benchmarks: Martal, Smartreach, Prospeo, Overloop. Every fact in the emails above links to a public source.</p>
+      </div>
+
+      <details class="card">
+        <summary>Research dossier</summary>
+        <pre id="dossier"></pre>
+      </details>
+    </section>
+    </div>
+  </main>
+
+  <footer>Built for Booster · within-the-hour delivery for London’s luxury boutiques · public information only · nothing is sent automatically</footer>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="requests.js"></script>
+  <script src="buyers.js"></script>
+</body>
+</html>
